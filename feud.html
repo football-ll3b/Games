@@ -27,6 +27,30 @@ body{background:radial-gradient(ellipse at 50% 0,#1c3d78,#071023 73%);font-famil
 .hostonly{border:2px dashed #f1b957;border-radius:21px;background:linear-gradient(140deg,#192e52,#0e1d3b)}.controls button{border-radius:13px;min-height:52px}
 button:focus-visible{outline:3px solid #ffd36e;outline-offset:2px}
 @media(max-width:650px){.card{padding:14px}#home{padding:24px 15px}.top h1{font-size:23px}}
+
+/* V4.6: full in-game arena styling, no gameplay changes */
+body{background:radial-gradient(ellipse at 50% 0%,#264b89 0%,#0b1b39 48%,#070e21 100%)}
+.top{background:#0a1834e8;border:1px solid #5b7eb65c;border-radius:18px;padding:14px 18px;box-shadow:0 8px 24px #0006}
+.top h1{font-size:clamp(23px,3vw,38px);text-shadow:0 0 18px #ffb93b55}
+.card{background:linear-gradient(155deg,#162d57,#09182f);border:1px solid #5b80b5;border-radius:24px;box-shadow:0 16px 40px #0006}
+#home{position:relative;overflow:hidden;padding:clamp(28px,5vw,65px) 20px;background:linear-gradient(90deg,#09162eea,#0a1b3fe0),url('./logo-banner.png') center/cover}
+#home h2{font-size:clamp(30px,4.5vw,49px);color:#ffd778;text-shadow:0 5px 18px #0009}
+#home .gold{font-size:20px;padding:16px 28px}
+#setup h2{color:#ffd778;text-align:center;font-size:clamp(25px,3vw,35px)}
+.team{background:linear-gradient(140deg,#174a8c,#0b214a);border:2px solid #42a8ff;box-shadow:0 8px 25px #0005}
+.team:nth-child(2){background:linear-gradient(140deg,#7e173a,#290e2d);border-color:#ff5f83}
+.team.active{box-shadow:0 0 0 3px #ffd36d,0 0 27px #ffca6040}
+.question{padding:15px 8px;color:white;text-shadow:0 4px 16px #0009}
+.answer{background:linear-gradient(120deg,#184e88,#102b56);border:2px solid #42b8ed;box-shadow:inset 0 1px #ffffff20,0 6px 15px #0004}
+.answer:nth-child(2n){background:linear-gradient(120deg,#21447d,#13244c)}
+.answer.open{background:linear-gradient(120deg,#137c86,#0c535c);border-color:#69f3dc;box-shadow:0 0 20px #1adbb34d}
+.answer b{background:#07182e;border:1px solid #72b8ff;color:#ffda7e}.answer em{color:#ffdb7e;font-weight:900}
+.pot{color:#ffd46f;text-shadow:0 0 18px #ffb72c55}
+.hostonly{background:linear-gradient(145deg,#152b4d,#101d35);border:2px dashed #e6b753}
+.controls button{background:linear-gradient(130deg,#295da2,#193c72);border:1px solid #6d9ed8;min-height:52px}
+.controls button.gold{background:linear-gradient(130deg,#ffe18c,#edae3d);color:#171b29}.controls button.danger{background:linear-gradient(130deg,#b83456,#762139)}.controls button.good{background:linear-gradient(130deg,#149a83,#0d645c)}
+#roundlabel,#turnlabel{color:#e2edff;font-weight:700}.notice{font-weight:800;color:#ffdb86}
+@media(max-width:600px){.wrap{padding:9px}.card{padding:14px}.teams,.board{gap:8px}.answer{min-height:67px;padding:9px}.controls button{min-width:135px}}
 </style></head><body><div class="wrap"><div class="top"><h1 style="color:var(--gold)">🎤 وش قالوا الناس</h1><div class="row"><span class="tag small" id="connection">وضع محلي</span><button onclick="full()">⛶ ملء الشاشة</button><button onclick="home()">⌂ الرئيسية</button></div></div>
 <section class="card center" id="home"><h2>⚔️ مواجهة الفريقين</h2><p class="muted">الفريق الأزرق ضد الأحمر • ثلاث أخطاء • محاولة سرقة واحدة</p><button class="gold" onclick="show('setup')">🎮 مباراة جديدة</button> <button onclick="resume()">↩ استكمال المباراة</button><p class="muted small">لربط هاتف المقدّم، افتح اللعبة من رابط HTTPS واضبط Firebase أولاً.</p><button onclick="showCloud()">⚙️ إعداد الربط المباشر</button></section>
 <section class="card hide" id="setup"><h2>إعداد المباراة</h2><label>الفريق الأزرق</label><input id="t0" value="الفريق الأزرق"/><label>الفريق الأحمر</label><input id="t1" value="الفريق الأحمر"/><label>عدد الجولات</label><select id="rounds"><option>5</option><option selected="">10</option><option>15</option><option>20</option></select><button class="gold" onclick="start()">ابدأ المباراة</button></section>
