@@ -15,6 +15,18 @@ input,select{border-radius:13px;border-color:#ffffff35;padding:14px;background:#
 .hostonly{border-radius:22px;border:1px solid #dca94f88;background:linear-gradient(145deg,#202a4a,#111d35)}
 .controls{gap:11px}.controls button{min-height:50px}
 @media(max-width:650px){.top{padding:9px}.top .row{justify-content:center}.controls button{min-width:125px}}
+
+/* V4.5 refreshed quiz arena */
+body{background:radial-gradient(ellipse at 50% 0,#1c3d78,#071023 73%);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif}
+.wrap{max-width:1360px}.top{background:#0b1b37;border:1px solid #47679c;border-radius:17px;box-shadow:0 8px 24px #0005}.top h1{color:#ffce6d!important}
+.card{border-radius:23px;border:1px solid #4e74a0;background:linear-gradient(145deg,#1a3159,#0c1b39);box-shadow:0 12px 35px #0005}
+#home{background:linear-gradient(180deg,#102449d9,#0a1938f2),url('./logo-banner.png') center/cover;padding:clamp(30px,5vw,60px);border:1px solid #6c85b3}
+#home h2{font-size:clamp(28px,4vw,42px);color:#ffda84}#home .gold{font-size:19px;padding:15px 25px}
+#setup{border:1px solid #6e8db7}#setup h2{color:#ffd575}#setup input,#setup select{background:#0b1d3c;border:1px solid #5775a6;color:#fff;margin:7px 0 16px}
+.team{border-radius:20px;box-shadow:0 8px 24px #0004}.answer{background:linear-gradient(130deg,#20446e,#16365e);border:2px solid #51b5d5;border-radius:16px}.answer.revealed{background:linear-gradient(130deg,#14665f,#164b6c)}
+.hostonly{border:2px dashed #f1b957;border-radius:21px;background:linear-gradient(140deg,#192e52,#0e1d3b)}.controls button{border-radius:13px;min-height:52px}
+button:focus-visible{outline:3px solid #ffd36e;outline-offset:2px}
+@media(max-width:650px){.card{padding:14px}#home{padding:24px 15px}.top h1{font-size:23px}}
 </style></head><body><div class="wrap"><div class="top"><h1 style="color:var(--gold)">🎤 وش قالوا الناس</h1><div class="row"><span class="tag small" id="connection">وضع محلي</span><button onclick="full()">⛶ ملء الشاشة</button><button onclick="home()">⌂ الرئيسية</button></div></div>
 <section class="card center" id="home"><h2>⚔️ مواجهة الفريقين</h2><p class="muted">الفريق الأزرق ضد الأحمر • ثلاث أخطاء • محاولة سرقة واحدة</p><button class="gold" onclick="show('setup')">🎮 مباراة جديدة</button> <button onclick="resume()">↩ استكمال المباراة</button><p class="muted small">لربط هاتف المقدّم، افتح اللعبة من رابط HTTPS واضبط Firebase أولاً.</p><button onclick="showCloud()">⚙️ إعداد الربط المباشر</button></section>
 <section class="card hide" id="setup"><h2>إعداد المباراة</h2><label>الفريق الأزرق</label><input id="t0" value="الفريق الأزرق"/><label>الفريق الأحمر</label><input id="t1" value="الفريق الأحمر"/><label>عدد الجولات</label><select id="rounds"><option>5</option><option selected="">10</option><option>15</option><option>20</option></select><button class="gold" onclick="start()">ابدأ المباراة</button></section>
