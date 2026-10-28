@@ -91,7 +91,30 @@ body{background:radial-gradient(ellipse at 50% 5%,#173a5e 0,#07192d 49%,#020915 
 .vault-option .emoji{flex-shrink:0}
 .sound-control{position:fixed;left:16px;bottom:16px;z-index:200;background:linear-gradient(#223b5a,#0a1c32);border:1px solid #dfb456;color:#ffdb91;box-shadow:0 8px 22px #0009;padding:11px 15px;font-size:16px;border-radius:30px;min-width:100px}
 @media(max-width:700px){.sound-control{left:8px;bottom:8px;padding:9px 12px;font-size:13px}}
-</style></head><body><main>
+</style><style id="approved-vault-design-3">
+/* Approved concept 3: dark gold vault, cinematic and responsive */
+:root{--gold:#ffcb61;--blue:#090e17;--line:#76552c}
+body{background:radial-gradient(ellipse at 50% -20%,#5b3c18 0,#161510 42%,#06080e 82%)!important;color:#fff5da}
+main{max-width:1440px!important}
+#home.hero{position:relative;overflow:hidden;isolation:isolate;min-height:min(88vh,820px);max-width:1440px!important;margin:8px auto 22px!important;padding:clamp(24px,3vw,44px)!important;border:1px solid #c58b3d77;border-radius:25px;background:radial-gradient(circle at 70% 50%,#93601c33,transparent 44%),linear-gradient(160deg,#0b0d12 12%,#19150f 55%,#080c14)!important;box-shadow:inset 0 0 90px #0008,0 24px 70px #000a;grid-template-columns:1fr 1.04fr!important;gap:clamp(20px,4vw,60px)!important}
+#home.hero:before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 90px,#ecc07a12 92px 94px),linear-gradient(0deg,#b4761930,transparent 33%);z-index:-1;pointer-events:none}
+#home .hero-copy{position:relative;z-index:2;text-align:center;padding:12px 0}
+#home h1{font-size:clamp(42px,5.5vw,78px)!important;color:#ffd270!important;text-shadow:0 5px 35px #f3b65644;margin:18px 0!important}
+#home .tag{background:#1b140c;border:1px solid #d9a45866;color:#f5c979;padding:9px 22px;border-radius:30px;font-weight:800}
+#home .hero-copy .muted{color:#e2c79f;font-size:clamp(17px,1.6vw,23px)}
+#home .hero-copy .menu{max-width:480px!important;margin:29px auto!important;gap:12px}
+#home .menu button{width:100%;border-radius:12px!important;min-height:65px!important;background:linear-gradient(180deg,#273d57,#0c1c32)!important;border:1px solid #9db0c777!important;box-shadow:inset 0 2px 0 #ffffff16,0 7px 19px #0008;font-size:clamp(17px,1.8vw,23px)}
+#home .menu button.gold{background:linear-gradient(135deg,#ffe79f,#f4bd52 55%,#c18729)!important;color:#241303;border:1px solid #ffe2a5!important;box-shadow:0 6px 26px #b37d3155}
+#home .vault-art{order:0;aspect-ratio:650/720!important;position:relative;max-width:550px!important;width:100%!important;mask-image:none!important;border:0!important;border-radius:12px!important;background:url('vault-door.svg') center/contain no-repeat!important;filter:drop-shadow(0 10px 38px #faba4144)!important;box-shadow:none!important;animation:vaultBreathe 6s ease-in-out infinite}
+#home .vault-art:before,#home .vault-art:after{display:none!important}
+@keyframes vaultBreathe{50%{filter:drop-shadow(0 14px 48px #ffc65c88)}}
+.panel{background:linear-gradient(145deg,#131a24,#0b1420)!important;border:1px solid #ad824d77!important;box-shadow:0 13px 35px #0007}
+#setup h2,#play h2,#settings h2,#results h2{color:#ffd17b;text-shadow:0 2px 15px #ffb52c22}
+.team-card,.vault-option{box-shadow:0 8px 20px #0007;transition:transform .18s,box-shadow .18s}.vault-option:hover,.team-card:hover{transform:translateY(-2px)}
+button:focus-visible{outline:3px solid #ffdc89;outline-offset:3px}
+@media(max-width:760px){#home.hero{grid-template-columns:1fr!important;min-height:unset;gap:4px!important;padding:17px!important}#home .vault-art{max-width:300px!important;max-height:280px;order:-1!important}#home h1{font-size:38px!important}#home .menu button{min-height:54px!important}}
+@media(prefers-reduced-motion:reduce){#home .vault-art{animation:none}}
+</style><script>try{const v=JSON.parse(localStorage.getItem('jaras_global_settings')||'{}');if(v.motion===false)document.documentElement.classList.add('jaras-reduced-motion');if(v.sound===false){localStorage.setItem('khazna_sound_v8','off');localStorage.setItem('jaras_sound_muted','1');localStorage.setItem('jaras_champ_mute','1')}else if(v.sound===true){localStorage.setItem('khazna_sound_v8','on');localStorage.setItem('jaras_sound_muted','0');localStorage.setItem('jaras_champ_mute','0')}}catch(e){}</script><style>.jaras-reduced-motion *, .jaras-reduced-motion *:before,.jaras-reduced-motion *:after{animation:none!important;transition:none!important}</style></head><body><main>
 <section id="home" class="hero"><div class="hero-copy"><span class="tag">🏆 تحدي الخزائن • الإصدار السينمائي</span><h1>🔐 افتح الخزنة</h1><p class="muted">فك الشفرة، اهزم الوقت، واجمع كنوز فريقك</p><div class="menu"><button class="gold" onclick="show('setup')">🎮 لعبة جديدة</button><button onclick="resume()">↩️ استكمال المباراة</button><button class="gray" onclick="show('rules')">📖 طريقة اللعب</button><button class="gray" onclick="show('settings')">⚙️ الإعدادات</button></div><p class="muted small">2 إلى 4 فرق · 3 خزائن لكل فريق · 3 بطاقات مساعدة</p></div><div class="vault-art" aria-hidden="true"></div></section>
 <section id="rules" class="panel hide"><h2 class="section-title">📖 طريقة اللعب</h2><p>قرعة تلقائية تحدد الفريق الأول. لكل فريق ثلاث خزائن (متوسط 3 دقائق، صعب 4:30، صعب جداً 6 دقائق). أربعة أسئلة تكسب أرقاماً غير مرتبة عند الإجابة الصحيحة فقط؛ اللغز الخامس يعطي أدلة ترتيبها. إدخال الرمز الصحيح قبل انتهاء الوقت يمنح النقاط كاملة. لا توجد سرقة أو نقاط جزئية.</p><p>كل فريق يختار 3 مساعدات مختلفة تستخدم مرة واحدة. عند تساوي النقاط يفوز الأقل في مجموع وقت الخزائن الثلاث؛ وإذا تساوى الوقت أيضاً تظهر جولة فاصلة.</p><button onclick="show('home')">العودة للرئيسية</button></section>
 <section id="settings" class="panel hide"><h2 class="section-title">⚙️ الإعدادات</h2><label><input type="checkbox" id="soundToggle" checked> تشغيل المؤثرات الصوتية البسيطة</label><p class="muted small">الحركات تتوقف تلقائياً عند تفعيل تقليل الحركة في إعدادات الجهاز.</p><p class="muted">المباراة تُحفظ على هذا الجهاز تلقائياً. حذف بيانات الموقع من المتصفح قد يحذف الحفظ.</p><button onclick="show('home')">العودة للرئيسية</button></section>
