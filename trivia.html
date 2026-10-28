@@ -96,6 +96,32 @@ button:focus-visible{outline:3px solid #53d7ff;outline-offset:3px}
 @media(min-width:760px) and (max-width:1050px){#board .cat button{height:32px!important;font-size:15px!important}}
 /* Updates are offered outside an active match only. */
 body:has(#game:not(.hide)) #updateBanner{display:none!important}
+</style><style id="jaras-ipad-v2-actual-board">
+/* Actual game elements: #board, #scoreboard, #game */
+@media (min-width:900px) and (orientation:landscape){
+ html,body{width:100%;overflow-x:hidden}
+ main{max-width:100%!important;padding:8px 14px 22px!important}
+ #game>.panel{margin:7px 0!important;padding:10px 14px!important}
+ #game #turnInfo{font-size:clamp(17px,2vw,25px)!important;margin:3px 0 7px!important}
+ #game #scoreboard{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+ #game #scoreboard .score{padding:8px!important;min-width:0!important}
+ #game #scoreboard .score strong{font-size:27px!important}
+ #game #scoreboard .team-aids{display:flex!important;gap:5px!important;justify-content:center!important;margin:7px 0 0!important}
+ #game #scoreboard .team-aid{font-size:11px!important;padding:4px 6px!important}
+ #game #board{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:7px!important;align-items:stretch!important}
+ #game #board .cat{padding:6px!important;min-width:0!important;overflow:hidden!important}
+ #game #board .cat h3{font-size:clamp(11px,1.2vw,16px)!important;min-height:35px!important;margin:3px 0 5px!important;line-height:1.15!important}
+ #game #board .cat-icon{font-size:23px!important}
+ #game #board .cat button{height:clamp(39px,5.5vh,55px)!important;margin:3px 0!important;padding:3px 0!important;font-size:clamp(15px,1.8vw,23px)!important;border-radius:11px!important}
+ #game #boardPanel{padding:10px!important}
+ #game #boardPanel>.row{margin:3px 0 6px!important}
+ #game #boardPanel>.row button{font-size:12px!important;padding:6px 9px!important}
+}
+@media (min-width:700px) and (max-width:899px){#game #board{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+/* The update prompt must never cover a running or saved match. */
+body:has(#game:not(.hide)) #updateBanner,
+body:has(#questionPanel:not(.hide)) #updateBanner,
+body:has(#vsScreen:not(.hide)) #updateBanner{display:none!important;visibility:hidden!important;pointer-events:none!important}
 </style></head><body><main><header class="hero"><h1>🏆 تحدي المعلومات</h1><p class="muted">تحدي المعرفة — تصميم النيون الحديث</p></header><nav class="nav"><button class="secondary" onclick="showPage('home')">🏠 الرئيسية</button><button class="secondary" onclick="showPage('settings')">⚙️ الإعدادات</button><button class="secondary" onclick="toggleFullscreen()">⛶ ملء الشاشة</button></nav>
 <section class="panel neon-home" id="home"><div class="neon-curtain"><div class="neon-orbit orbit-one"></div><div class="neon-orbit orbit-two"></div><div class="neon-brain">🧠</div><div class="neon-shine"></div></div><div class="neon-copy"><span class="neon-label">⚡ منافسة معلوماتية مباشرة</span><h2>🏆 تحدي المعلومات</h2><p>معلومات • سرعة • منافسة واحدة</p><div class="menu neon-menu"><button onclick="showPage('setup')">🎯 لعبة جديدة</button><button class="secondary" onclick="showPage('settings')">🎨 الإعدادات</button><button class="secondary" onclick="showPage('bank')">📚 بنك الأسئلة</button><button class="secondary" onclick="showPage('rules')">📖 طريقة اللعب</button><button class="secondary" onclick="showPage('records')">🏆 سجل النتائج</button><button class="secondary" onclick="resumeGame()">↩️ استكمال الجولة المحفوظة</button></div><div class="neon-stats">🌌 مسرح المعرفة  •  🎯 فئات متعددة  •  🏆 فرق ونقاط</div></div></section>
 <section class="panel hide" id="setup"><h2>🎯 اختر 6 فئات</h2><div class="category-list" id="categoryChoices"></div><p class="muted" id="selectionCount"></p><button class="secondary wide" onclick="randomSix()">🎲 اختيار 6 فئات عشوائياً</button><h2>👥 الفرق والألوان</h2><div class="teams" id="teamInputs"></div><p>لون الفريقين</p><select id="duoPalette" onchange="applyDuoPalette()"><option value="0">أحمر ضد أصفر</option><option selected="" value="1">أحمر ضد أزرق</option><option value="2">أزرق ضد وردي</option><option value="3">بنفسجي ضد برتقالي</option><option value="4">أخضر ضد أحمر</option><option value="5">سماوي ضد ذهبي</option></select><h3>🃏 اختر 3 مساعدات لكل فريق</h3><div class="teams" id="aidChoices"></div><p>الفريق الذي يبدأ</p><div class="row"><select id="starter"></select><button class="secondary" onclick="randomStarter()">🎲 قرعة</button></div><p id="status" style="color:#ffd36e"></p><button class="gold wide" onclick="startGame()">ابدأ اللعبة</button></section>
