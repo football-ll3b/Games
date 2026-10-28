@@ -264,4 +264,4 @@ function add(){if(document.querySelector('[data-jaras-mute]'))return;const b=doc
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const v=(b.getAttribute('onclick')||'')+' '+(b.textContent||'');if(/act\('wrong'\)|إجابة خطأ/.test(v))play('wrong');else if(/act\('answer'\)|data-answer-index|كشف جميع الإجابات/.test(v))play('reveal');else if(/ابدأ المباراة|مباراة جديدة/.test(v))play('start')},true);window.jarasPlay=play;document.addEventListener('DOMContentLoaded',add);
 })();
 </script>
-</body></html>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));</script><script src="jaras-v53.js"></script></body></html>

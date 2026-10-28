@@ -1,0 +1,15 @@
+(()=>{'use strict';
+const KEY='jaras-v53-options';let cfg={};try{cfg=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{}
+const qs=new URLSearchParams(location.search);const presenter=qs.has('presenter')||new URLSearchParams(location.hash.slice(1)).has('presenter');
+// Presenter handset must remain silent. Other screens play according to shared settings.
+if(presenter){try{localStorage.setItem('jaras-v53-presenter','1')}catch{}
+ const mute=()=>{try{if(window.JarasAudio)window.JarasAudio.setSettings({enabled:false})}catch{}};
+ mute();document.addEventListener('DOMContentLoaded',mute);
+}
+const css=document.createElement('style');css.textContent=`@keyframes jarasEnter{from{opacity:.4;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}@media(prefers-reduced-motion:no-preference){section:not(.hide){animation:jarasEnter .32s ease-out}}#jarasOffline{position:fixed;bottom:12px;right:12px;z-index:99999;background:#50330b;color:#fff;padding:9px 14px;border-radius:12px;font:600 14px system-ui;box-shadow:0 4px 20px #0008}#jarasOffline[hidden]{display:none!important}`;document.head.appendChild(css);
+const badge=document.createElement('div');badge.id='jarasOffline';badge.hidden=true;badge.textContent='📴 وضع بدون إنترنت — المزامنة متوقفة';document.body.appendChild(badge);
+function status(){badge.hidden=navigator.onLine;};addEventListener('online',status);addEventListener('offline',status);status();
+const exp=document.getElementById('v53export'),imp=document.getElementById('v53import'),file=document.getElementById('v53file');
+if(exp)exp.onclick=()=>{const data={format:'jaras-local-backup',version:1,created:new Date().toISOString(),origin:location.origin,items:{}};for(let i=0;i<localStorage.length;i++){let k=localStorage.key(i);if(k&&(/jaras|feud|trivia|vault|khazna|game|score|question|result|team|sahat/i).test(k))data.items[k]=localStorage.getItem(k)}const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='jaras-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)};
+if(imp)imp.onclick=()=>file.click();if(file)file.onchange=async()=>{try{const data=JSON.parse(await file.files[0].text());if(data.format!=='jaras-local-backup'||!data.items||typeof data.items!=='object'||Object.keys(data.items).length>2000)throw Error('ملف غير صالح');if(!confirm('استيراد النسخة سيستبدل بيانات الحفظ المحلية المتطابقة. هل تريد المتابعة؟'))return;for(const [k,v]of Object.entries(data.items)){if(typeof v!=='string'||k.length>150||v.length>3000000)throw Error('بيانات غير صالحة')}for(const [k,v]of Object.entries(data.items))localStorage.setItem(k,v);alert('تم استيراد البيانات المحلية. حدّث الصفحة لعرضها.')}catch(e){alert('تعذر الاستيراد: '+e.message)}finally{file.value=''}};
+})();
