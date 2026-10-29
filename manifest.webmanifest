@@ -1,17 +1,14 @@
 {
-  "name": "جرس التحديات | الألعاب الأربع",
+  "id": "./index.html",
+  "name": "جرس التحديات",
   "short_name": "جرس التحديات",
-  "start_url": "./index.html?v=55",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0b1236",
-  "theme_color": "#0b1236",
+  "orientation": "any",
+  "background_color": "#081327",
+  "theme_color": "#081327",
   "icons": [
-    {
-      "src": "./icon-180.png",
-      "sizes": "180x180",
-      "type": "image/png"
-    },
     {
       "src": "./icon-192.png",
       "sizes": "192x192",
@@ -21,7 +18,11 @@
       "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "./apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
     }
-  ],
-  "id": "./index.html"
+  ]
 }

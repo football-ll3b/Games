@@ -1,15 +1,88 @@
-(()=>{'use strict';
-const KEY='jaras-v53-options';let cfg={};try{cfg=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{}
-const qs=new URLSearchParams(location.search);const presenter=qs.has('presenter')||new URLSearchParams(location.hash.slice(1)).has('presenter');
-// Presenter handset must remain silent. Other screens play according to shared settings.
-if(presenter){try{localStorage.setItem('jaras-v53-presenter','1')}catch{}
- const mute=()=>{try{if(window.JarasAudio)window.JarasAudio.setSettings({enabled:false})}catch{}};
- mute();document.addEventListener('DOMContentLoaded',mute);
-}
-const css=document.createElement('style');css.textContent=`@keyframes jarasEnter{from{opacity:.4;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}@media(prefers-reduced-motion:no-preference){section:not(.hide){animation:jarasEnter .32s ease-out}}#jarasOffline{position:fixed;bottom:12px;right:12px;z-index:99999;background:#50330b;color:#fff;padding:9px 14px;border-radius:12px;font:600 14px system-ui;box-shadow:0 4px 20px #0008}#jarasOffline[hidden]{display:none!important}`;document.head.appendChild(css);
-const badge=document.createElement('div');badge.id='jarasOffline';badge.hidden=true;badge.textContent='📴 وضع بدون إنترنت — المزامنة متوقفة';document.body.appendChild(badge);
-function status(){badge.hidden=navigator.onLine;};addEventListener('online',status);addEventListener('offline',status);status();
-const exp=document.getElementById('v53export'),imp=document.getElementById('v53import'),file=document.getElementById('v53file');
-if(exp)exp.onclick=()=>{const data={format:'jaras-local-backup',version:1,created:new Date().toISOString(),origin:location.origin,items:{}};for(let i=0;i<localStorage.length;i++){let k=localStorage.key(i);if(k&&(/jaras|feud|trivia|vault|khazna|game|score|question|result|team|sahat/i).test(k))data.items[k]=localStorage.getItem(k)}const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='jaras-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)};
-if(imp)imp.onclick=()=>file.click();if(file)file.onchange=async()=>{try{const data=JSON.parse(await file.files[0].text());if(data.format!=='jaras-local-backup'||!data.items||typeof data.items!=='object'||Object.keys(data.items).length>2000)throw Error('ملف غير صالح');if(!confirm('استيراد النسخة سيستبدل بيانات الحفظ المحلية المتطابقة. هل تريد المتابعة؟'))return;for(const [k,v]of Object.entries(data.items)){if(typeof v!=='string'||k.length>150||v.length>3000000)throw Error('بيانات غير صالحة')}for(const [k,v]of Object.entries(data.items))localStorage.setItem(k,v);alert('تم استيراد البيانات المحلية. حدّث الصفحة لعرضها.')}catch(e){alert('تعذر الاستيراد: '+e.message)}finally{file.value=''}};
+/* Jaras shared app update helper. Safe to load from the home page or individual games. */
+(function () {
+  'use strict';
+  var BUILD = '4.8.1';
+  var regPromise = null;
+  function getRegistration() {
+    if (!('serviceWorker' in navigator)) return Promise.resolve(null);
+    if (!regPromise) regPromise = navigator.serviceWorker.register('./service-worker.js').catch(function () { return null; });
+    return regPromise;
+  }
+  function setStatus(message) {
+    var el = document.getElementById('jarasUpdateStatus');
+    if (el) el.textContent = message;
+  }
+  function showApply(show) {
+    var el = document.getElementById('jarasApplyUpdate');
+    if (el) el.hidden = !show;
+  }
+  function reloadWhenControlled() {
+    if (!('serviceWorker' in navigator)) return;
+    var wasControlled = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (wasControlled && sessionStorage.getItem('jaras_update_reload') === '1') {
+        sessionStorage.removeItem('jaras_update_reload'); location.reload();
+      }
+      wasControlled = true;
+    });
+  }
+  async function checkUpdate() {
+    var button = document.getElementById('jarasUpdateButton');
+    if (button) button.disabled = true;
+    showApply(false);
+    setStatus('جارٍ فحص تحديث التطبيق والملفات…');
+    try {
+      var versionResponse = await fetch('./version.json?check=' + Date.now(), { cache: 'no-store' });
+      if (!versionResponse.ok) throw new Error('version unavailable');
+      var remote = await versionResponse.json();
+      var reg = await getRegistration();
+      if (reg) {
+        await reg.update().catch(function () {});
+        if (reg.waiting) {
+          setStatus('يتوفر تحديث للتطبيق. اضغط «تطبيق التحديث الآن».'); showApply(true);
+        } else {
+          var worker = reg.installing || reg.waiting;
+          if (worker) {
+            worker.addEventListener('statechange', function () {
+              if (worker.state === 'installed' && navigator.serviceWorker.controller) {
+                setStatus('تم تنزيل التحديث. اضغط «تطبيق التحديث الآن».'); showApply(true);
+              }
+            });
+          }
+          if (String(remote.version || BUILD) === BUILD) {
+            setStatus('أنت على أحدث إصدار (' + BUILD + ').');
+          } else {
+            setStatus('نسخة أحدث متاحة: ' + String(remote.version) + '. اضغط لتطبيقها.'); showApply(true);
+          }
+        }
+      } else {
+        setStatus('تعذر تشغيل التحديث التلقائي في هذا المتصفح. حدّث الصفحة بعد نشر الملفات.');
+      }
+    } catch (_) {
+      setStatus('تعذر الاتصال للتحقق من التحديث. تأكد من الإنترنت ثم أعد المحاولة.');
+    } finally { if (button) button.disabled = false; }
+  }
+  async function applyUpdate() {
+    var reg = await getRegistration();
+    if (reg && reg.waiting) {
+      sessionStorage.setItem('jaras_update_reload', '1');
+      reg.waiting.postMessage('SKIP_WAITING');
+      setStatus('يجري تطبيق التحديث…');
+      setTimeout(function () { location.reload(); }, 1200);
+      return;
+    }
+    setStatus('يجري تحديث الصفحة…');
+    location.reload();
+  }
+  function init() {
+    reloadWhenControlled();
+    var button = document.getElementById('jarasUpdateButton');
+    if (button) button.addEventListener('click', checkUpdate);
+    var apply = document.getElementById('jarasApplyUpdate');
+    if (apply) apply.addEventListener('click', applyUpdate);
+    getRegistration();
+    var v = document.getElementById('jarasCurrentVersion');
+    if (v) v.textContent = 'الإصدار ' + BUILD;
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
