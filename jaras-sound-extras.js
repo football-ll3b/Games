@@ -1,0 +1,12 @@
+/* Sound settings enhancement only; original controls remain usable. */
+(()=>{'use strict';
+const rows=[['ui','أصوات الأزرار والاختيار','select'],['answers','الإجابات وكشفها','reveal'],['mechanical','الخزنة والصناديق','vault'],['countdown','العد التنازلي','tick'],['celebration','الاحتفالات والألعاب النارية','win'],['announcer','المقدّم العربي (صوت الجهاز)',''],['applause','التصفيق والهتافات (عند توفرها)','']];
+function setup(){let api=window.JarasAudio, panel=document.getElementById('jarasAudioPanel');if(!api||!panel)return;
+const extras=document.createElement('section');extras.id='jarasSoundExtras';extras.style.cssText='border-top:1px solid #8d80bd;padding-top:12px;margin-top:12px;max-height:44vh;overflow:auto;direction:rtl';
+let title=document.createElement('strong');title.textContent='التحكم المستقل بالأصوات';extras.appendChild(title);
+for(const [key,label,sample] of rows){let row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:8px;justify-content:space-between;padding:7px 0;border-bottom:1px solid #ffffff20';let check=document.createElement('input');check.type='checkbox';check.checked=api.getSettings()[key]!==false;check.setAttribute('aria-label',label);check.onchange=()=>api.setSettings({[key]:check.checked});let txt=document.createElement('span');txt.textContent=label;txt.style.cssText='flex:1;font-size:13px';row.append(check,txt);if(sample){let b=document.createElement('button');b.textContent='▶';b.type='button';b.setAttribute('aria-label','تجربة '+label);b.style.cssText='padding:5px 9px;min-width:35px';b.onclick=()=>api.play(sample);row.appendChild(b)}extras.appendChild(row)}
+let voiceRow=document.createElement('label');voiceRow.style.cssText='display:block;padding:8px 0';voiceRow.textContent='مستوى صوت المقدّم: ';let voiceRange=document.createElement('input');voiceRange.type='range';voiceRange.min='0';voiceRange.max='100';voiceRange.value=api.getSettings().voiceVolume??75;voiceRange.style.width='100%';voiceRange.oninput=()=>api.setSettings({voiceVolume:Number(voiceRange.value)});voiceRow.appendChild(voiceRange);extras.appendChild(voiceRow);
+let mute=document.createElement('button');mute.textContent='كتم الكل';mute.type='button';mute.style.cssText='width:100%;margin-top:10px';mute.onclick=()=>{api.setSettings({enabled:false});const e=document.getElementById('jaEnable');if(e)e.checked=false};extras.appendChild(mute);panel.appendChild(extras);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});else setup();
+})();

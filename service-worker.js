@@ -1,50 +1,54 @@
-/* Jaras V5.8: embedded 90-scene Hawk Eye bank. Never touches game saves. */
+/* Jaras Neon Stage 07B: embedded artwork. Asset cache only: never touches localStorage,
+ * IndexedDB, Firebase, scores, questions, preferences or saved matches. */
 'use strict';
-const CACHE = 'jaras-v58-iphone-nav-backup-20261031-1';
-const ASSETS = ['index.html','trivia.html','feud.html','vault.html','mystery.html','jaras-audio.js','jaras-v53.js','manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png','vault-door.svg'];
+const CACHE = 'jaras-official-neon-audio-20261101';
+const ASSETS = ["index.html","trivia.html","feud.html","vault.html","mystery.html","jaras-category-art.js","jaras-category-art.css","jaras-motion.js","jaras-motion.css","jaras-announcer.js","jaras-audio.js","jaras-sound-extras.js","jaras-v53.js","neon-stage.css","neon-view.js","chest-bronze.svg","chest-gold.svg","chest-silver.svg","vault-door.svg","icon-180.png","icon-192.png","icon-512.png","manifest.webmanifest","version.json"];
 const scoped = name => new URL(name, self.registration.scope).href;
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE);
+    // Do not activate an incomplete visual package or borrow obsolete artwork.
     await Promise.all(ASSETS.map(async name => {
       const url = scoped(name);
-      try {
-        const response = await fetch(url, {cache:'reload'});
-        if (!response.ok) throw new Error('HTTP '+response.status);
-        await cache.put(url, response);
-      } catch (error) {
-        const previous = await caches.match(url, {ignoreSearch:true});
-        if (previous && name !== 'mystery.html') await cache.put(url, previous);
-        if (name === 'mystery.html') throw error;
-      }
+      const response = await fetch(url, {cache:'reload'});
+      if (!response.ok) throw new Error('Missing package asset: '+name+' ('+response.status+')');
+      await cache.put(url, response);
     }));
     await self.skipWaiting();
   })());
 });
 self.addEventListener('activate', event => {
-  // Keep previous caches as a safety fallback for existing games and optional artwork.
-  // localStorage / IndexedDB / Firebase are never cleared or migrated by this worker.
+  // Old caches are retained for rollback. User data is not migrated or cleared.
   event.waitUntil(self.clients.claim());
 });
 self.addEventListener('fetch', event => {
-  const req = event.request, url = new URL(req.url);
-  if (req.method !== 'GET' || url.origin !== self.location.origin || !url.href.startsWith(self.registration.scope)) return;
-  const isDocument = req.mode === 'navigate' || /\.html$/.test(url.pathname) || url.pathname.endsWith('/');
-  const key = new URL(url.href); key.hash = '';
-  if (isDocument) { key.search=''; if (key.pathname.endsWith('/')) key.pathname += 'index.html'; }
+  const req=event.request, url=new URL(req.url);
+  if (req.method!=='GET' || url.origin!==self.location.origin || !url.href.startsWith(self.registration.scope)) return;
+  const key=new URL(url.href); key.hash='';key.search='';
+  if (key.pathname.endsWith('/')) key.pathname+='index.html';
+  const localPath=key.href.slice(self.registration.scope.length);
+  // Only handle files belonging to this package, never other data/APIs on the site.
+  if (!ASSETS.includes(localPath)) return;
+  const fresh = /\.(html|css|js|json|webmanifest)$/.test(key.pathname);
   event.respondWith((async () => {
+    const cache=await caches.open(CACHE);
+    if (!fresh) {
+      const hit=await cache.match(key.href);
+      if (hit) return hit;
+    }
     try {
-      const response = await fetch(req, {cache:isDocument?'no-cache':'default'});
-      if (response.ok && response.type !== 'opaque') {
+      const response=await fetch(req,{cache:fresh?'no-cache':'default'});
+      if (response.ok) {
         const copy=response.clone();
-        event.waitUntil(caches.open(CACHE).then(c=>c.put(key.href,copy)).catch(()=>{}));
+        event.waitUntil(cache.put(key.href,copy).catch(()=>{}));
+        return response;
       }
-      return response;
+      // A transient server failure must not replace a working cached file.
+      const hit=await cache.match(key.href);
+      return hit || response;
     } catch (_) {
-      const own=await caches.open(CACHE);
-      const cached=await own.match(key.href) || await caches.match(key.href,{ignoreSearch:true});
-      if (cached) return cached;
-      return new Response(isDocument?'<!doctype html><meta charset="utf-8"><title>Offline</title><p>This page has not been saved offline yet. Reconnect once and reopen it.</p>':'Offline asset unavailable', {status:503,headers:{'Content-Type':isDocument?'text/html; charset=utf-8':'text/plain'}});
+      const hit=await cache.match(key.href);
+      return hit || new Response('Offline asset not available. Reconnect and reopen once.',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8'}});
     }
   })());
 });

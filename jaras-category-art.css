@@ -1,0 +1,6 @@
+/* Only category illustrations, preserving the original selection and point controls. */
+#categoryChoices .category-emoji:has(img[data-jaras-cat]){width:72px;height:56px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 72px;overflow:hidden;border-radius:9px;background:#0b1b38}
+#categoryChoices .category-emoji img[data-jaras-cat]{display:block;width:100%;height:100%;object-fit:cover}
+#board .cat-icon:has(img[data-jaras-cat]){display:block;width:100%;height:auto;aspect-ratio:1.8;overflow:hidden;border-radius:10px;margin:0 auto 6px}
+#board .cat-icon img[data-jaras-cat]{display:block;width:100%;height:100%;object-fit:cover}
+@media(max-width:700px){#categoryChoices .category-emoji:has(img[data-jaras-cat]){width:54px;height:45px;flex-basis:54px}}

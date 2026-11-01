@@ -1,0 +1,29 @@
+/* Motion-only add-on. No sizes, layout, hit areas, content, or game state changes. */
+html[data-jaras-motion="on"] .neon-hub:not(.playing) .arcade-art>img,
+html[data-jaras-motion="on"] .neon-on-home .lobby-art>img {
+  animation:jm-float 5.6s ease-in-out infinite;
+}
+html[data-jaras-motion="on"] .arcade-card:nth-child(2) .arcade-art>img{animation-delay:-1.4s}
+html[data-jaras-motion="on"] .arcade-card:nth-child(3) .arcade-art>img{animation-delay:-2.8s}
+html[data-jaras-motion="on"] .arcade-card:nth-child(4) .arcade-art>img{animation-delay:-4.2s}
+html[data-jaras-motion="on"] .neon-hub:not(.playing) .stage-set i:nth-child(3){animation:jm-beam-left 10s ease-in-out infinite alternate;transform-origin:top center}
+html[data-jaras-motion="on"] .neon-hub:not(.playing) .stage-set i:nth-child(4){animation:jm-beam-right 11s ease-in-out infinite alternate;transform-origin:top center}
+html[data-jaras-motion="on"] .neon-on-home .lobby-halo::after{animation:jm-orbit 45s linear infinite}
+html[data-jaras-motion="on"] .neon-on-home .lobby-spark{animation:jm-spark 4.8s ease-in-out infinite}
+@keyframes jm-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes jm-beam-left{from{transform:rotate(19deg);opacity:.65}to{transform:rotate(27deg);opacity:.85}}
+@keyframes jm-beam-right{from{transform:rotate(-26deg);opacity:.7}to{transform:rotate(-18deg);opacity:.9}}
+@keyframes jm-orbit{to{transform:rotate(360deg)}}
+@keyframes jm-spark{0%,100%{opacity:.4;transform:scale(.88)}50%{opacity:1;transform:scale(1.05)}}
+#jaras-motion-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:10000;pointer-events:none!important;user-select:none;contain:strict}
+html[data-jaras-motion="off"] #jaras-motion-canvas{display:none!important}
+html[data-jaras-motion-paused="true"] .arcade-art>img,
+html[data-jaras-motion-paused="true"] .lobby-art>img,
+html[data-jaras-motion-paused="true"] .stage-set i,
+html[data-jaras-motion-paused="true"] .lobby-halo::after,
+html[data-jaras-motion-paused="true"] .lobby-spark{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){
+  .neon-app .arcade-art>img,.neon-app .lobby-art>img,.neon-app .stage-set i,
+  .neon-app .lobby-halo::after,.neon-app .lobby-spark{animation:none!important}
+  #jaras-motion-canvas{display:none!important}
+}
